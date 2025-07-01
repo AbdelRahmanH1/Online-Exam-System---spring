@@ -49,12 +49,18 @@ CREATE TABLE exam (
 CREATE TABLE question (
                           id BIGINT AUTO_INCREMENT PRIMARY KEY,
                           text TEXT NOT NULL,
-                          correct_answer TEXT NOT NULL,
-                          submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                          correct_answer VARCHAR(255) NOT NULL,
                           exam_id BIGINT NOT NULL,
                           FOREIGN KEY (exam_id) REFERENCES exam(id) ON DELETE CASCADE
 );
-
+-- ========================
+-- QUESTION CHOICES
+-- ========================
+CREATE TABLE question_choices (
+                                  question_id BIGINT NOT NULL,
+                                  choice VARCHAR(255) NOT NULL,
+                                  FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE CASCADE
+);
 -- ========================
 -- EXAM ATTEMPT
 -- ========================
