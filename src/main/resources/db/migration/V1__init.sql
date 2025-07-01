@@ -50,6 +50,7 @@ CREATE TABLE question (
                           id BIGINT AUTO_INCREMENT PRIMARY KEY,
                           text TEXT NOT NULL,
                           correct_answer VARCHAR(255) NOT NULL,
+                          points DOUBLE NOT NULL DEFAULT 1,
                           exam_id BIGINT NOT NULL,
                           FOREIGN KEY (exam_id) REFERENCES exam(id) ON DELETE CASCADE
 );
@@ -71,8 +72,8 @@ CREATE TABLE exam_attempt (
                               started_at DATETIME NOT NULL,
                               submitted_at DATETIME,
                               score DOUBLE,
-                              FOREIGN KEY (student_id) REFERENCES student(id),
-                              FOREIGN KEY (exam_id) REFERENCES exam(id)
+                              FOREIGN KEY (student_id) REFERENCES student(id) ON DELETE CASCADE ,
+                              FOREIGN KEY (exam_id) REFERENCES exam(id) ON DELETE CASCADE
 );
 
 -- ========================
