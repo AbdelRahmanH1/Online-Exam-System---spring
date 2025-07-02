@@ -1,10 +1,12 @@
 package com.system.online_exam_system.user.entites;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
+import com.system.online_exam_system.exam.entites.ExamAttempt;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "student")
@@ -13,4 +15,7 @@ import lombok.Setter;
 @Setter
 public class Student extends User{
     private int grade;
+
+    @OneToMany(mappedBy = "student",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<ExamAttempt> attempts = new ArrayList<>();
 }

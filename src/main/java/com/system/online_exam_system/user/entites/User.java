@@ -24,6 +24,7 @@ public class User {
     private String password;
 
     @Column(name = "role")
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Column(name = "created_at", updatable = false,insertable = false)
