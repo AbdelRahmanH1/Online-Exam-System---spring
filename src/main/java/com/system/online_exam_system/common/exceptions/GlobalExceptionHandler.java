@@ -32,4 +32,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handlePageNotFound(){
         return   ResponseUtil.failure("Page Not Found",HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<?> handleApiException(ApiException e){
+        return  ResponseUtil.failure(e.getMessage(),e.getStatus());
+    }
 }
