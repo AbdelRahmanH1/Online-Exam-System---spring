@@ -27,4 +27,10 @@ public class UserController {
         var response = adminUserService.getAllUsers(page);
         return ResponseUtil.success("All Users Found",response, HttpStatus.OK);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable(name = "id") Long id){
+        var response = adminUserService.getUserById(id);
+        return ResponseUtil.success("User Found",response);
+    }
 }

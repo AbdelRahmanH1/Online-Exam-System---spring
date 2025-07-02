@@ -1,5 +1,6 @@
 package com.system.online_exam_system.user.services;
 
+import com.system.online_exam_system.common.exceptions.UserNotFound;
 import com.system.online_exam_system.user.dtos.CreateUserRequest;
 import com.system.online_exam_system.user.dtos.UserResponse;
 import com.system.online_exam_system.user.entites.Instructor;
@@ -19,6 +20,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 
 @Service
 @AllArgsConstructor
@@ -71,11 +74,14 @@ public class AdminUserService {
     }
 
 
-    // getAllUser
     public Page<UserResponse> getAllUsers(Integer pageNumber) {
         int page = (pageNumber == null || pageNumber < 0) ? 0 : pageNumber;
         Pageable pageable = PageRequest.of(page, 10);
         return userRepository.findAllUsers(pageable);
+    }
+
+    public UserResponse getUserById(Long id) {
+        return userRepository.findUserResponseById(id).orElseThrow(UserNotFound::new);
     }
     // deleteUser
 
