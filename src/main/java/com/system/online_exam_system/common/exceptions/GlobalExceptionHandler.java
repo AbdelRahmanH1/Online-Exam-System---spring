@@ -4,6 +4,7 @@ import com.system.online_exam_system.common.utils.ResponseUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -27,7 +28,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleHttpMessageNotReadableException(){
         return  ResponseUtil.failure("Missing Json object",HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler(NoHandlerFoundException.class)
+    @ExceptionHandler({NoHandlerFoundException.class, HttpRequestMethodNotSupportedException.class})
     public ResponseEntity<?> handlePageNotFound(){
         return   ResponseUtil.failure("Page Not Found",HttpStatus.NOT_FOUND);
     }
