@@ -15,6 +15,9 @@ import com.system.online_exam_system.user.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -48,16 +51,16 @@ public class AdminUserService {
         User user;
 
 
-        switch (role){
-            case STUDENT ->{
+        switch (role) {
+            case STUDENT -> {
                 Student student = studentMapper.toStudent(request);
                 user = studentRepository.save(student);
             }
-            case INSTRUCTOR ->{
+            case INSTRUCTOR -> {
                 Instructor instructor = instructorMapper.toInstructor(request);
                 user = instructorRepository.save(instructor);
             }
-            case ADMIN ->{
+            case ADMIN -> {
                 user = userMapper.toEntity(request);
                 userRepository.save(user);
             }
@@ -69,6 +72,11 @@ public class AdminUserService {
 
 
     // getAllUser
+    public Page<UserResponse> getAllUsers(Integer pageNumber) {
+        int page = (pageNumber == null || pageNumber < 0) ? 0 : pageNumber;
+        Pageable pageable = PageRequest.of(page, 10);
+        return userRepository.findAllUsers(pageable);
+    }
     // deleteUser
 
 }
