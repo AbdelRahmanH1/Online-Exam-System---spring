@@ -30,4 +30,11 @@ public class StudentService {
         var student = studentRepository.findById(id).orElseThrow(StudentNotFound::new);
         return studentMapper.toStudentResponse(student);
     }
+
+    public void deleteStudentById(Long id) {
+        if(!studentRepository.existsById(id)) {
+            throw new StudentNotFound();
+        }
+        studentRepository.deleteById(id);
+    }
 }
