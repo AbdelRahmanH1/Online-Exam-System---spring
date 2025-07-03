@@ -14,6 +14,8 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByName(String name);
 
+    boolean existsById(Long id);
+
     @Query("SELECT u.id , u.name,u.role FROM User u")
     Page<UserResponse> findAllUsers(Pageable pageable);
 

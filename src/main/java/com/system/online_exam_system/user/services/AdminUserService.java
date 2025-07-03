@@ -21,7 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.attribute.UserPrincipalNotFoundException;
+
 
 @Service
 @AllArgsConstructor
@@ -83,6 +83,12 @@ public class AdminUserService {
     public UserResponse getUserById(Long id) {
         return userRepository.findUserResponseById(id).orElseThrow(UserNotFound::new);
     }
-    // deleteUser
+
+    public void deleteUserById(Long id) {
+        if(!userRepository.existsById(id)) {
+            throw new UserNotFound();
+        }
+        userRepository.deleteById(id);
+    }
 
 }

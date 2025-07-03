@@ -33,4 +33,10 @@ public class UserController {
         var response = adminUserService.getUserById(id);
         return ResponseUtil.success("User Found",response);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUserById(@PathVariable(name = "id") Long id){
+        adminUserService.deleteUserById(id);
+        return ResponseUtil.success("User deleted successfully",null);
+    }
 }
