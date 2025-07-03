@@ -1,5 +1,6 @@
 package com.system.online_exam_system.user.services;
 
+import com.system.online_exam_system.common.exceptions.StudentNotFound;
 import com.system.online_exam_system.user.dtos.StudentResponse;
 import com.system.online_exam_system.user.mappers.StudentMapper;
 import com.system.online_exam_system.user.repositories.StudentRepository;
@@ -8,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 
 @Service
@@ -24,5 +24,10 @@ public class StudentService {
         Pageable pageable = PageRequest.of(page, 10);
         var students = studentRepository.findAll(pageable);
         return students.map(studentMapper::toStudentResponse);
+    }
+
+    public StudentResponse getStudentById(Long id) {
+        var student = studentRepository.findById(id).orElseThrow(StudentNotFound::new);
+        return studentMapper.toStudentResponse(student);
     }
 }
