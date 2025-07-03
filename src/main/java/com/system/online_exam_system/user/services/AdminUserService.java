@@ -1,5 +1,6 @@
 package com.system.online_exam_system.user.services;
 
+import com.system.online_exam_system.common.exceptions.ApiException;
 import com.system.online_exam_system.common.exceptions.UserNotFound;
 import com.system.online_exam_system.user.dtos.CreateUserRequest;
 import com.system.online_exam_system.user.dtos.UserResponse;
@@ -19,6 +20,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 
@@ -39,16 +41,16 @@ public class AdminUserService {
     public UserResponse createUser(@Valid CreateUserRequest request) {
 
         if (userRepository.existsByName(request.getName())) {
-            throw new IllegalArgumentException("Username already exists");
+            throw new ApiException("Username already exists", HttpStatus.BAD_REQUEST);
         }
         Role role = request.getRole();
 
         if (role == Role.STUDENT && request.getGrade() == null) {
-            throw new IllegalArgumentException("Grade is required for students.");
+            throw new ApiException("Grade is required for students.",HttpStatus.BAD_REQUEST);
         }
 
         if (role == Role.INSTRUCTOR && request.getDepartment() == null) {
-            throw new IllegalArgumentException("Department  is required for instructors.");
+            throw new ApiException("Department  is required for instructors.",HttpStatus.BAD_REQUEST);
         }
 
         User user;
