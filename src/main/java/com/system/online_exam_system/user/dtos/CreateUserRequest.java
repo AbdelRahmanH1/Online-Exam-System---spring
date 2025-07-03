@@ -1,8 +1,10 @@
 package com.system.online_exam_system.user.dtos;
 
+import com.system.online_exam_system.common.exceptions.ApiException;
 import com.system.online_exam_system.user.enums.Role;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.springframework.http.HttpStatus;
 
 @Data
 public class CreateUserRequest {
@@ -22,4 +24,11 @@ public class CreateUserRequest {
     private Integer grade;
 
     private String department;
+
+    public void validateNameFormat(){
+        String[] parts = name.split("\\s+");
+        if(parts.length<2){
+            throw new ApiException("Invalid name format", HttpStatus.BAD_REQUEST);
+        }
+    }
 }
