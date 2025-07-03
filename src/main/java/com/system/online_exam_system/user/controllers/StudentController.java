@@ -14,20 +14,32 @@ public class StudentController {
     private final StudentService studentService;
 
     @GetMapping
-    public ResponseEntity<?> getAllStudents(@RequestParam(name = "page",required = false,defaultValue = "0") Integer page) {
+    public ResponseEntity<?> getAllStudents(@RequestParam(name = "page", required = false, defaultValue = "0") Integer page) {
         var response = studentService.getStudents(page);
-        return ResponseUtil.success("get all students",response);
+        return ResponseUtil.success("get all students", response);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getStudentById(@PathVariable(name = "id") Long id) {
         var response = studentService.getStudentById(id);
-        return ResponseUtil.success("get student by id",response);
+        return ResponseUtil.success("get student by id", response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteStudentById(@PathVariable(name = "id") Long id) {
         studentService.deleteStudentById(id);
-        return ResponseUtil.success("delete student by id",null);
+        return ResponseUtil.success("delete student by id", null);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchStudents(
+            @RequestParam(name = "name", required = false) String name,
+            @RequestParam(name = "grade", required = false) Integer grade,
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page
+            ) {
+                var response =  studentService.searchStudents(name,grade,page);
+                return  ResponseUtil.success("search student by name and grade", response);
+    }
+    // update User
+
 }
