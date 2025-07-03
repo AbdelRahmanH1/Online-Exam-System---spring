@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Random;
 
 
 @Service
@@ -36,13 +37,34 @@ public class AdminUserService {
     private final InstructorMapper instructorMapper;
 
 
-    // createUser
+    private String generateUsername(String name){
+        name = name.toLowerCase();
+        String[] parts = name.split("\\s+");
+        if(parts.length<2){
+            throw new ApiException("Invalid name format", HttpStatus.BAD_REQUEST);
+        }
+        String firstName = parts[0];
+        String middleName = parts[1].substring(0, 1).toUpperCase() ;
+        String lastName = (parts.length >=3) ? parts[2] : parts[1];
+
+        String base = firstName + "_"+middleName + "_"+lastName;
+        String username;
+        int attempts = 0;
+
+        do{
+            int random = 1000 + new Random().nextInt(9000);
+            username = base+"_"+random;
+            attempts++;
+            if (attempts > 5) {
+                throw new ApiException("Unable to generate unique username", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }while (userRepository.existsByUsername(username));
+        return username;
+    }
+
     @Transactional
     public UserResponse createUser(@Valid CreateUserRequest request) {
-
-        if (userRepository.existsByName(request.getName())) {
-            throw new ApiException("Username already exists", HttpStatus.BAD_REQUEST);
-        }
+        request.validateNameFormat();
         Role role = request.getRole();
 
         if (role == Role.STUDENT && request.getGrade() == null) {
@@ -54,19 +76,21 @@ public class AdminUserService {
         }
 
         User user;
-
-
+        String username = generateUsername(request.getName());
         switch (role) {
             case STUDENT -> {
                 Student student = studentMapper.toStudent(request);
+                student.setUsername(username);
                 user = studentRepository.save(student);
             }
             case INSTRUCTOR -> {
                 Instructor instructor = instructorMapper.toInstructor(request);
+                instructor.setUsername(username);
                 user = instructorRepository.save(instructor);
             }
             case ADMIN -> {
                 user = userMapper.toEntity(request);
+                user.setUsername(username);
                 userRepository.save(user);
             }
             default -> throw new IllegalArgumentException("Invalid role");
