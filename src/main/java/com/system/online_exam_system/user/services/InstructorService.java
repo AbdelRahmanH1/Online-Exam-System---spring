@@ -26,4 +26,11 @@ public class InstructorService {
         var  instructor = instructorRepository.findById(id).orElseThrow(InstructorNotFound::new);
         return instructorMapper.toInstructorResponse(instructor);
     }
+
+    public void deleteInstructorById(Long id) {
+        if(!instructorRepository.existsById(id)) {
+            throw new InstructorNotFound();
+        }
+        instructorRepository.deleteById(id);
+    }
 }

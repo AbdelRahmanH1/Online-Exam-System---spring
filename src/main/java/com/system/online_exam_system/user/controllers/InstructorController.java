@@ -24,4 +24,10 @@ public class InstructorController {
         var response = instructorService.getInstructorById(id);
         return ResponseUtil.success("get instructor", response);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteInstructorById(@PathVariable(name = "id") long id){
+        instructorService.deleteInstructorById(id);
+        return ResponseUtil.success("delete instructor", id);
+    }
 }
