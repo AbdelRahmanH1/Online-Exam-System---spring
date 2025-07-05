@@ -2,6 +2,7 @@ package com.system.online_exam_system.user.services;
 
 import com.system.online_exam_system.common.exceptions.ApiException;
 import com.system.online_exam_system.common.exceptions.StudentNotFound;
+import com.system.online_exam_system.common.utils.BuildPageable;
 import com.system.online_exam_system.user.dtos.StudentResponse;
 import com.system.online_exam_system.user.dtos.UpdateGradeRequest;
 import com.system.online_exam_system.user.entites.Student;
@@ -9,8 +10,6 @@ import com.system.online_exam_system.user.mappers.StudentMapper;
 import com.system.online_exam_system.user.repositories.StudentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -21,15 +20,11 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
+    private final int PAGE_SIZE = 10;
 
-
-    private Pageable buildPageable(Integer pageNumber) {
-        int page = (pageNumber == null || pageNumber < 0) ? 0 : pageNumber;
-        return PageRequest.of(page, 10);
-    }
 
     public Page<StudentResponse> getStudents(Integer pageNumber) {
-        var pageable = buildPageable(pageNumber);
+        var pageable = BuildPageable.of(pageNumber, PAGE_SIZE);
         var students = studentRepository.findAll(pageable);
         return students.map(studentMapper::toStudentResponse);
     }
@@ -47,17 +42,17 @@ public class StudentService {
     }
 
     private Page<Student> getStudentsByGrade(int grade, Integer pageNumber) {
-        var pageable = buildPageable(pageNumber);
+        var pageable = BuildPageable.of(pageNumber, PAGE_SIZE);
         return studentRepository.findByGrade(grade,pageable);
     }
 
     private Page<Student> getStudentsByName(String name, Integer pageNumber) {
-        var pageable = buildPageable(pageNumber);
+        var pageable = BuildPageable.of(pageNumber, PAGE_SIZE);
         return studentRepository.findByNameContainingIgnoreCase(name,pageable);
 
     }
     private Page<Student> getStudentsByNameAndGrade(String name,int grade, Integer pageNumber) {
-        var pageable = buildPageable(pageNumber);
+        var pageable = BuildPageable.of(pageNumber, PAGE_SIZE);
         return   studentRepository.findByNameContainingIgnoreCaseAndGrade(name,grade,pageable);
 
     }
@@ -74,7 +69,7 @@ public class StudentService {
         }else if(hasGrade) {
             result = getStudentsByGrade(grade,pageNumber);
         }else{
-            result = studentRepository.findAll(buildPageable(pageNumber));
+            result = studentRepository.findAll(BuildPageable.of(pageNumber,PAGE_SIZE));
         }
         return result.map(studentMapper::toStudentResponse);
     }
