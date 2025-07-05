@@ -30,4 +30,14 @@ public class InstructorController {
         instructorService.deleteInstructorById(id);
         return ResponseUtil.success("delete instructor", id);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchInstructor(
+            @RequestParam(name = "name",required = false) String name,
+            @RequestParam(name = "page",required = false,defaultValue = "0")  int page,
+            @RequestParam(name = "department",required = false) String department
+    ){
+        var response = instructorService.searchInstructors(name,department,page);
+        return ResponseUtil.success("search instructor", response);
+    }
 }
