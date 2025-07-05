@@ -18,4 +18,11 @@ public class Student extends User{
 
     @OneToMany(mappedBy = "student",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<ExamAttempt> attempts = new ArrayList<>();
+
+    public boolean canPromoteTo(int newGrade){
+        return newGrade >= this.grade;
+    }
+    public void promoteTo(int newGrade){
+        this.grade = newGrade;
+    }
 }

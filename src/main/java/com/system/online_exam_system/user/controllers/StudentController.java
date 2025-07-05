@@ -1,7 +1,9 @@
 package com.system.online_exam_system.user.controllers;
 
 import com.system.online_exam_system.common.utils.ResponseUtil;
+import com.system.online_exam_system.user.dtos.UpdateGradeRequest;
 import com.system.online_exam_system.user.services.StudentService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +42,10 @@ public class StudentController {
                 var response =  studentService.searchStudents(name,grade,page);
                 return  ResponseUtil.success("search student by name and grade", response);
     }
-    // update User
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateStudent(@Valid @RequestBody UpdateGradeRequest request , @PathVariable(name = "id") long id) {
+        studentService.updateStudent(id,request);
+        return  ResponseUtil.success("update student by id", null);
+    }
 }

@@ -1,7 +1,9 @@
 package com.system.online_exam_system.user.services;
 
+import com.system.online_exam_system.common.exceptions.ApiException;
 import com.system.online_exam_system.common.exceptions.StudentNotFound;
 import com.system.online_exam_system.user.dtos.StudentResponse;
+import com.system.online_exam_system.user.dtos.UpdateGradeRequest;
 import com.system.online_exam_system.user.entites.Student;
 import com.system.online_exam_system.user.mappers.StudentMapper;
 import com.system.online_exam_system.user.repositories.StudentRepository;
@@ -9,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 
@@ -74,5 +77,13 @@ public class StudentService {
             result = studentRepository.findAll(buildPageable(pageNumber));
         }
         return result.map(studentMapper::toStudentResponse);
+    }
+    public void updateStudent(long id, UpdateGradeRequest request) {
+        var student = studentRepository.findById(id).orElseThrow(StudentNotFound::new);
+        if(!student.canPromoteTo(request.getGrade())) {
+            throw new ApiException("Can't descend from grade", HttpStatus.BAD_REQUEST);
+        }
+        student.promoteTo(request.getGrade());
+        studentRepository.save(student);
     }
 }
