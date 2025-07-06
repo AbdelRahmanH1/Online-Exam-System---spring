@@ -4,10 +4,12 @@ import com.system.online_exam_system.common.utils.ResponseUtil;
 import com.system.online_exam_system.user.services.InstructorService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/instructors")
+@RequestMapping("/api/instructors")
+@PreAuthorize("hasRole('ADMIN')")
 @AllArgsConstructor
 public class InstructorController {
 
