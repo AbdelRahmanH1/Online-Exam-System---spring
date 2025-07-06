@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
@@ -35,6 +36,7 @@ public class AdminUserService {
     private final UserMapper userMapper;
     private final StudentMapper studentMapper;
     private final InstructorMapper instructorMapper;
+    private final PasswordEncoder passwordEncoder;
 
 
     private String generateUsername(String name){
@@ -81,16 +83,19 @@ public class AdminUserService {
             case STUDENT -> {
                 Student student = studentMapper.toStudent(request);
                 student.setUsername(username);
+                student.setPassword(passwordEncoder.encode(request.getPassword()));
                 user = studentRepository.save(student);
             }
             case INSTRUCTOR -> {
                 Instructor instructor = instructorMapper.toInstructor(request);
                 instructor.setUsername(username);
+                instructor.setPassword(passwordEncoder.encode(request.getPassword()));
                 user = instructorRepository.save(instructor);
             }
             case ADMIN -> {
                 user = userMapper.toEntity(request);
                 user.setUsername(username);
+                user.setPassword(passwordEncoder.encode(request.getPassword()));
                 userRepository.save(user);
             }
             default -> throw new IllegalArgumentException("Invalid role");
