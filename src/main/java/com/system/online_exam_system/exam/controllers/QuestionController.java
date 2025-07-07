@@ -3,6 +3,7 @@ package com.system.online_exam_system.exam.controllers;
 import com.system.online_exam_system.common.utils.ResponseUtil;
 import com.system.online_exam_system.exam.dtos.AddChoicesRequest;
 import com.system.online_exam_system.exam.dtos.AddQuestionRequest;
+import com.system.online_exam_system.exam.dtos.UpdateQuestionRequest;
 import com.system.online_exam_system.exam.services.QuestionService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -31,4 +32,9 @@ public class QuestionController {
         return ResponseUtil.success("Add Choices successfully",null, HttpStatus.CREATED);
     }
 
+    @PatchMapping("/{questionId}")
+    public ResponseEntity<?> updateQuestion(@PathVariable Long questionId,@Valid @RequestBody UpdateQuestionRequest request) {
+       var response =  questionService.updateQuestion(questionId,request);
+       return ResponseUtil.success("Updated Question Successfully", response, HttpStatus.OK);
+    }
 }
