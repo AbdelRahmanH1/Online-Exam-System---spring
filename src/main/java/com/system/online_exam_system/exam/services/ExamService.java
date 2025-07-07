@@ -93,4 +93,15 @@ public class ExamService {
         }
         return examMapper.toExamResponse(exam);
     }
+
+    public void deleteExamById(Long examId) {
+        var userId = SecurityUtil.getUserId();
+        var exam = examRepository.findById(examId).orElseThrow(ExamNotFound::new);
+
+        if(!exam.getInstructor().getId().equals(userId)){
+            throw new ForbiddenException("delete exam");
+        }
+        examRepository.delete(exam);
+
+    }
 }

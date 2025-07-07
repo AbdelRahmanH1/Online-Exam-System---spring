@@ -45,4 +45,10 @@ public class ExamController {
         var response =  examService.getExamById(id);
         return ResponseUtil.success("Get exam successfully", response);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteExamById(@PathVariable Long id){
+        examService.deleteExamById(id);
+        return ResponseUtil.success("Delete exam successfully",null);
+    }
 }
