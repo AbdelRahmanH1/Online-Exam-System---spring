@@ -1,6 +1,7 @@
 package com.system.online_exam_system.auth.config;
 
 import com.system.online_exam_system.auth.filter.JwtFilter;
+import com.system.online_exam_system.common.exceptions.CustomAccessDeniedHandler;
 import com.system.online_exam_system.common.exceptions.UnauthorizedException;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -25,6 +26,7 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
     private final UnauthorizedException unauthorizedException;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -46,6 +48,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(c->{
                     c.authenticationEntryPoint(unauthorizedException);
+                    c.accessDeniedHandler(accessDeniedHandler);
                 })
         ;
         return http.build();
