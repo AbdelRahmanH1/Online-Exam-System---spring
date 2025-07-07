@@ -1,10 +1,12 @@
 package com.system.online_exam_system.exam.entites;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.system.online_exam_system.user.entites.Instructor;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,9 +23,11 @@ public class Exam {
     private String title;
 
     @Column(name = "start_time")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime startTime;
 
     @Column(name = "end_time")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime endTime;
 
     @Column(name = "duration_minutes")
@@ -38,4 +42,9 @@ public class Exam {
 
     @Column(name = "allow_multiple_attempts")
     private boolean allowMultipleAttempts;
+
+    public boolean isTimeValid(){
+        return !endTime.isBefore(startTime);
+    }
+
 }
