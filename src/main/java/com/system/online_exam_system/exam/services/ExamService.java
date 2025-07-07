@@ -1,5 +1,6 @@
 package com.system.online_exam_system.exam.services;
 
+import com.system.online_exam_system.common.utils.BuildPageable;
 import com.system.online_exam_system.common.utils.SecurityUtil;
 import com.system.online_exam_system.exam.dtos.CreateExamRequest;
 import com.system.online_exam_system.exam.dtos.ExamResponse;
@@ -13,6 +14,7 @@ import com.system.online_exam_system.user.entites.Instructor;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -77,4 +79,18 @@ public class ExamService {
         return examMapper.toExamResponse(exam);
     }
 
+    public Page<ExamResponse> getAllExams(int pageNumber) {
+        var userId = SecurityUtil.getUserId();
+        var exams = examRepository.findAllByInstructor_Id(userId, BuildPageable.of(pageNumber, 10));
+        return exams.map(examMapper::toExamResponse);
+    }
+
+    public ExamResponse getExamById(Long examId) {
+        var userId = SecurityUtil.getUserId();
+        var exam = examRepository.findById(examId).orElseThrow(ExamNotFound::new);
+        if(!exam.getInstructor().getId().equals(userId)){
+            throw new ForbiddenException("get exam");
+        }
+        return examMapper.toExamResponse(exam);
+    }
 }
