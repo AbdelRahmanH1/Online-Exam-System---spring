@@ -1,6 +1,7 @@
 package com.system.online_exam_system.exam.controllers;
 
 import com.system.online_exam_system.common.utils.ResponseUtil;
+import com.system.online_exam_system.exam.dtos.AddChoicesRequest;
 import com.system.online_exam_system.exam.dtos.AddQuestionRequest;
 import com.system.online_exam_system.exam.services.QuestionService;
 import jakarta.validation.Valid;
@@ -23,4 +24,11 @@ public class QuestionController {
         var response = questionService.addQuestion(examId,request);
         return ResponseUtil.success("Created Question Successfully", response, HttpStatus.CREATED);
     }
+
+    @PostMapping("/{questionId}/choices")
+    public ResponseEntity<?> addChoicesToQuestion(@PathVariable Long questionId, @Valid @RequestBody AddChoicesRequest request) {
+        questionService.addChoices(questionId,request);
+        return ResponseUtil.success("Add Choices successfully",null, HttpStatus.CREATED);
+    }
+
 }

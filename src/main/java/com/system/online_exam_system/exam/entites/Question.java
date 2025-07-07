@@ -37,4 +37,16 @@ public class Question {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exam_id")
     private Exam exam;
+
+    public boolean hasChoices(){
+        return  choices != null && !choices.isEmpty();
+    }
+    public boolean hasCorrectAnswer(List<String> proposedChoices){
+        return proposedChoices.contains(correctAnswer);
+    }
+    public boolean isOwnedBy(Long userId) {
+        return this.exam != null &&
+                this.exam.getInstructor() != null &&
+                this.exam.getInstructor().getId().equals(userId);
+    }
 }
