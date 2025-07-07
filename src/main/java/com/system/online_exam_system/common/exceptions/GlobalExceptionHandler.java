@@ -1,6 +1,7 @@
 package com.system.online_exam_system.common.exceptions;
 
 import com.system.online_exam_system.common.utils.ResponseUtil;
+import com.system.online_exam_system.exam.exceptions.ForbiddenException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -24,6 +25,11 @@ public class GlobalExceptionHandler {
             errors.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
         return ResponseUtil.failure("validation failed", errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<?> handleForbiddenException(ForbiddenException e) {
+        return ResponseUtil.failure("You are not authorized to "+e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
