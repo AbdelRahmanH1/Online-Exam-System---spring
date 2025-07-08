@@ -49,4 +49,8 @@ public class Question {
                 this.exam.getInstructor() != null &&
                 this.exam.getInstructor().getId().equals(userId);
     }
+
+    public boolean isCorrectAnswer(String correctAnswer){
+        return correctAnswer.equalsIgnoreCase(this.correctAnswer);
+    }
 }
