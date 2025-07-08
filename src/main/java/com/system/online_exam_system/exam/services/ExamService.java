@@ -38,6 +38,9 @@ public class ExamService {
         instructor.setId(instructorId);
         exam.setInstructor(instructor);
 
+        if(exam.isStartTimeInPast()){
+            throw new InvalidTimeException();
+        }
         if(!exam.isTimeValid()){
             throw new InvalidTimeException();
         }

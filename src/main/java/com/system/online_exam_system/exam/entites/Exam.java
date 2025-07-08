@@ -43,8 +43,11 @@ public class Exam {
     @Column(name = "allow_multiple_attempts")
     private boolean allowMultipleAttempts;
 
-    public boolean isTimeValid(){
+    public boolean isTimeValid() {
         return !endTime.isBefore(startTime);
     }
 
+    public boolean isStartTimeInPast() {
+        return this.startTime != null && this.startTime.isBefore(LocalDateTime.now());
+    }
 }
