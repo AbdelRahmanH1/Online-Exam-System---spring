@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -91,5 +92,15 @@ public class QuestionService {
 
         questionRepository.save(question);
         return questionMapper.toResponse(question);
+    }
+
+    public List<QuestionResponse> getQuestionsByExam(Long examId) {
+        var exam = examRepository.findById(examId).orElseThrow(ExamNotFound::new);
+        var userId = SecurityUtil.getUserId();
+        if (!exam.getInstructor().getId().equals(userId)) {
+            throw new ForbiddenException("to add question");
+        }
+        var questions = questionRepository.findAllByExamId(examId);
+        return questions.stream().map(questionMapper::toResponse).collect(Collectors.toList());
     }
 }

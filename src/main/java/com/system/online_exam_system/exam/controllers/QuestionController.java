@@ -37,4 +37,12 @@ public class QuestionController {
        var response =  questionService.updateQuestion(questionId,request);
        return ResponseUtil.success("Updated Question Successfully", response, HttpStatus.OK);
     }
+
+    // Get all questions by examId
+    @GetMapping("/{examId}")
+    public ResponseEntity<?> getQuestionByExamId(@PathVariable Long examId) {
+        var response = questionService.getQuestionsByExam(examId);
+        return ResponseUtil.success("Get Exam Question Successfully", response);
+    }
+
 }
