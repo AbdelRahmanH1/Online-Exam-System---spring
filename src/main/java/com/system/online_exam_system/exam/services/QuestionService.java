@@ -103,4 +103,13 @@ public class QuestionService {
         var questions = questionRepository.findAllByExamId(examId);
         return questions.stream().map(questionMapper::toResponse).collect(Collectors.toList());
     }
+
+    public void deleteQuestionById(Long questionId) {
+        var question = questionRepository.findById(questionId).orElseThrow(QuestionNotFound::new);
+        var userId = SecurityUtil.getUserId();
+        if(!question.isOwnedBy(userId)) {
+            throw new ForbiddenException("to delete question");
+        }
+        questionRepository.delete(question);
+    }
 }

@@ -38,11 +38,15 @@ public class QuestionController {
        return ResponseUtil.success("Updated Question Successfully", response, HttpStatus.OK);
     }
 
-    // Get all questions by examId
     @GetMapping("/{examId}")
     public ResponseEntity<?> getQuestionByExamId(@PathVariable Long examId) {
         var response = questionService.getQuestionsByExam(examId);
         return ResponseUtil.success("Get Exam Question Successfully", response);
     }
 
+    @DeleteMapping("/{questionId}")
+    public ResponseEntity<?> deleteQuestionById(@PathVariable Long questionId) {
+        questionService.deleteQuestionById(questionId);
+        return ResponseUtil.success("Deleted Question Successfully", null);
+    }
 }
